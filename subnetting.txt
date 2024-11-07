@@ -1,0 +1,72 @@
+def main():
+    # Get the IP address input
+    ip = input("ENTER IP: ")
+    checkclass = ip.split('.')[0]
+
+    # Convert the first part of the IP address to an integer to determine the class
+    cc = int(checkclass)
+    mask = None
+    
+    # Determine the subnet mask based on the IP class
+    if cc > 0:
+        if cc <= 127:
+            mask = "255.0.0.0"
+            print("Class A IP Address")
+            print(f"SUBNET MASK:\n{mask}")
+        elif cc >= 128 and cc <= 191:
+            mask = "255.255.0.0"
+            print("Class B IP Address")
+            print(f"SUBNET MASK:\n{mask}")
+        elif cc >= 192 and cc <= 223:
+            mask = "255.255.255.0"
+            print("Class C IP Address")
+            print(f"SUBNET MASK:\n{mask}")
+        elif cc >= 224 and cc <= 239:
+            mask = "255.0.0.0"
+            print("Class D IP Address Used for multicasting")
+        elif cc >= 240 and cc <= 254:
+            mask = "255.0.0.0"
+            print("Class E IP Address Experimental Use")
+
+    # Split the IP and mask into their parts
+    ipAddrParts = ip.split('.')
+    maskParts = mask.split('.')
+
+    # Calculate the network and broadcast address
+    networkAddr = ""
+    lastAddr = ""
+
+    for i in range(4):
+        x = int(ipAddrParts[i])
+        y = int(maskParts[i])
+        
+        # Perform bitwise AND for network address
+        z = x & y
+        networkAddr += str(z) + '.'
+        
+        # Perform bitwise OR for broadcast address
+        w = z | (y ^ 255)
+        lastAddr += str(w) + '.'
+
+    # Remove the trailing dots
+    networkAddr = networkAddr[:-1]
+    lastAddr = lastAddr[:-1]
+
+    # Print the results
+    print(f"First IP of block: {networkAddr}")
+    print(f"Last IP of block: {lastAddr}")
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+OUTPUT:
+ENTER IP: 192.168.1.10
+Class C IP Address
+SUBNET MASK:
+255.255.255.0
+First IP of block: 192.168.1.0
+Last IP of block: 192.168.1.255
